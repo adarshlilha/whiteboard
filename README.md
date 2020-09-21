@@ -2,6 +2,8 @@
 
 A drawing board application with a canvas element with support to draw and write on it.
 
+[View Demo](https://canvas-whiteboard.netlify.app/ "View Demo")
+
 ### Features
 
 #### Tools
