@@ -50,20 +50,27 @@ export class View {
         this.context.clearRect(this.currentPos.x, this.currentPos.y, 18, 18);
     }
 
-    renderHighlighter(e) {
+    renderHighlighter(e, width) {
         //Highighter logic here
         this.context.lineTo(this.currentPos.x, this.currentPos.y);
         this.context.globalCompositeOperation = "multiply";
         this.context.globalAlpha = 0.5;
-        this.context.fillRect(e.clientX - 10, e.clientY - 10, 20, 20);
+        this.context.fillRect(e.clientX - 10, e.clientY - 10, 5 * width, 5 * width);
     }
 
-    handleMouseMove = (event, tool) => {
+    handleMouseMove = (event, tool, width) => {
         this.currentPos = getMouseCoordsOnCanvas(this.canvas, event);
 
-        if (tool === TOOL_TYPES.PEN) this.renderPen(event);
-        else if (tool === TOOL_TYPES.ERASER) this.renderEraser(event);
-        else this.renderHighlighter(event);
+        switch (tool) {
+            case TOOL_TYPES.PEN:
+                this.renderPen(event);
+                break;
+            case TOOL_TYPES.ERASER:
+                this.renderEraser(event);
+                break;
+            default:
+                this.renderHighlighter(event, width);
+        }
     }
 
     strokeColor = (color) => {
@@ -74,7 +81,7 @@ export class View {
         this.context.fillStyle = color;
     }
 
-    lineWidth = (width) => {
+    width = (width) => {
         this.context.lineWidth = width;
     }
 
@@ -83,7 +90,7 @@ export class View {
     }
 
     bindWindowResize() {
-        window.addEventListener('resize', event => {
+        window.addEventListener('resize', () => {
             this.handleResize();
         });
     }
@@ -119,18 +126,18 @@ export class View {
     bindWidthChange(handler) {
         this.getElement('#pen-size')
             .addEventListener('click', (event) => {
-                handler(event, this.lineWidth);
+                handler(event, this.width);
             });
     }
 
     bindHighlightWidthChange(handler) {
         this.getElement('#highlighter-size')
             .addEventListener('click', (event) => {
-                handler(event, this.lineWidth);
+                handler(event, this.width);
             });
-        this.getElement('[data-tool=HIGHLIGHTER]')
+        this.getElement('[data-tooltype=HIGHLIGHTER]')
             .addEventListener('click', (event) => {
-                handler(event, this.lineWidth);
+                handler(event, this.width);
             });
     }
 

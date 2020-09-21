@@ -28,7 +28,7 @@ export class Controller {
     }
 
     toggleActiveAndUpdateStack = (event, callback) => {
-        this.isActive = !this.isActive;
+        this.toggleActive();
         if (this.model.undoStack.length > this.model.undoLimit) this.model.removeItem();
 
         //If last action and current action are highlight, undo the last operation
@@ -46,16 +46,18 @@ export class Controller {
             this.isActive = false;
         }
         if (!this.isActive) return false;
-        if (callback) callback(event, this.model.tool);
+        if (callback) callback(event, this.model.tool, this.model.width);
     };
 
     updateColor = (event, callback) => {
-        this.model.updateColor(event.target.dataset.color);
+        const color = event.target.dataset.color || event.target.parentElement.dataset.color;
+        this.model.updateColor(color);
         if (callback) callback(this.model.color)
     };
 
     updateTool = (event, callback) => {
-        this.model.updateTool(event.target.dataset.tooltype);
+        const action = event.target.dataset.tooltype || event.target.parentElement.dataset.tooltype;
+        this.model.updateTool(action);
         if (callback) callback(this.model.tool)
     };
 
@@ -69,8 +71,12 @@ export class Controller {
     };
 
     updateWidth = (event, callback) => {
-        const width = event.target.dataset.linewidth || event.target.dataset.brushsize || event.target.parentElement.dataset.linewidth || event.target.parentElement.dataset.brushsize;
-        this.model.updateLineWidth(width);
-        if (callback) callback(this.model.lineWidth)
+        //Either linewith or highligher width has to be changed
+        const width =
+            event.target.dataset.linewidth || event.target.parentElement.dataset.linewidth ||
+            event.target.dataset.brushsize || event.target.parentElement.dataset.brushsize;
+
+        this.model.updateWidth(+width);
+        if (callback) callback(this.model.width)
     };
 }

@@ -7,24 +7,35 @@ import { TOOL_TYPES } from './constants'
  */
 export class Model {
     constructor() {
-        this.color = '#000'
-        this.tool = TOOL_TYPES.PEN
-        this.lineWidth = 2
-        this.highlightWidth = 5
+        this._color = '#000'
+        this._tool = TOOL_TYPES.PEN
+        this._width = 2
         this.undoStack = []
         this.undoLimit = 3
     }
 
     updateColor(color) {
-        this.color = color
+        this._color = color
+    }
+
+    get color() {
+        return this._color;
     }
 
     updateTool(tool) {
-        this.tool = tool
+        this._tool = tool
     }
 
-    updateLineWidth(width) {
-        this.lineWidth = width
+    get tool() {
+        return this._tool;
+    }
+
+    updateWidth(width) {
+        this._width = width
+    }
+
+    get width() {
+        return this._width;
     }
 
     addNewItem(item) {
